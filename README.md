@@ -213,7 +213,10 @@ Filling the input with an empty string will disabled this validator.
   </tr>
 </table>
 
-This validator checks if the pull request is linked one or more issues in the same or different repository.
+This validator checks if the pull request is linked one or more issues in the same or different repository either by [directly linking issue through the sidebar](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue#manually-linking-a-pull-request-or-branch-to-an-issue-using-the-issue-sidebar) or by using [magic closing keywords](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword).
+
+> [!NOTE]
+> Ensure that the access token you provide can access issues on the target repository.
 
 ### Pull request does not introduce too many changes
 
