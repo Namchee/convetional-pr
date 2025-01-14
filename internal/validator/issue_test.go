@@ -105,6 +105,23 @@ func TestIssueValidator_IsValid(t *testing.T) {
 			},
 		},
 		{
+			name: "should pass if provided by multiple references",
+			args: args{
+				prNumber: 3,
+				meta: &entity.Meta{
+					Name:  "conventional-pr",
+					Owner: "namcheee",
+				},
+				body:   "Closed #3. Fixes vitejs/vite#1783",
+				config: true,
+			},
+			want: &entity.ValidationResult{
+				Name:   constants.IssueValidatorName,
+				Active: true,
+				Result: nil,
+			},
+		},
+		{
 			name: "should reject if issue is not accessible",
 			args: args{
 				prNumber: 2,

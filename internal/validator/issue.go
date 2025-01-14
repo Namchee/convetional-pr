@@ -12,7 +12,8 @@ import (
 )
 
 var (
-	keywordPattern = regexp.MustCompile(`(?mi)\b(close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved)\s+(.+/.+)?#(\d+)\b`)
+	// TODO: Investigate allowed characters for orgs and repositories
+	keywordPattern = regexp.MustCompile(`(?mi)\b(close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved)\s+([a-zA-Z0-9\-]+/[a-zA-Z0-9\-\._]+)?#(\d+)\b`)
 )
 
 type issueValidator struct {
