@@ -4,6 +4,7 @@ import (
 	"context"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/Namchee/conventional-pr/internal"
 	"github.com/Namchee/conventional-pr/internal/constants"
@@ -11,7 +12,7 @@ import (
 )
 
 var (
-	keywordPattern = regexp.MustCompile(`(?mi)\b(close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved) #(\d+)\b`)
+	keywordPattern = regexp.MustCompile(`(?mi)\b(close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved)\s+(.+/.+)?#(\d+)\b`)
 )
 
 type issueValidator struct {
@@ -87,17 +88,27 @@ func (v *issueValidator) IsValid(
 }
 
 func (v *issueValidator) hasIssueMagicString(
-	ctx context.Context,
+	_ context.Context,
 	pullRequest *entity.PullRequest,
 ) bool {
 	keywords := keywordPattern.FindAllStringSubmatch(pullRequest.Body, -1)
 
-	for _, number := range keywords {
-		num, _ := strconv.Atoi(number[2])
+	for _, keyword := range keywords {
+		org := &pullRequest.Repository
+		num, _ := strconv.Atoi(keyword[3]) 
+
+		if len(keyword[2]) > 0 {
+			tokens := strings.Split(keyword[2], "/")
+
+			org = &entity.Meta{
+				Name: tokens[1],
+				Owner: tokens[0],
+			}
+		}
 
 		issue, _ := v.client.GetIssue(
 			context.Background(),
-			&pullRequest.Repository,
+			org,
 			num,
 		)
 

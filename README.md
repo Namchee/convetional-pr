@@ -213,7 +213,7 @@ Filling the input with an empty string will disabled this validator.
   </tr>
 </table>
 
-This validator checks if the pull request is linked one or more issues.
+This validator checks if the pull request is linked one or more issues in the same or different repository.
 
 ### Pull request does not introduce too many changes
 

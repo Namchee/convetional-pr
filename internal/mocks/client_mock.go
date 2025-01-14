@@ -158,23 +158,27 @@ func (m *githubClientMock) Close(
 
 func (m *githubClientMock) GetIssue(
 	_ context.Context,
-	_ *entity.Meta,
+	meta *entity.Meta,
 	issueNumber int,
 ) (*entity.IssueReference, error) {
-	switch issueNumber {
-	case 2:
+	if meta.Owner == "vitejs" && meta.Name == "vite" {
 		return &entity.IssueReference{
-			Number: 2,
+			Number: issueNumber,
+			Meta: *meta,
+		}, nil
+	}
+
+	if issueNumber == 3 {
+		return &entity.IssueReference{
+			Number: issueNumber,
 			Meta: entity.Meta{
 				Owner: "Namchee",
 				Name:  "conventional-pr",
 			},
 		}, nil
-	case 3:
-		return &entity.IssueReference{}, nil
-	default:
-		return nil, errors.New("mock error")
 	}
+
+	return nil, errors.New("mock error")
 }
 
 func (m *githubClientMock) GetIssueReferences(
@@ -193,6 +197,8 @@ func (m *githubClientMock) GetIssueReferences(
 			},
 		}, nil
 	case 2:
+		return []*entity.IssueReference{}, nil
+	case 3:
 		return []*entity.IssueReference{}, nil
 	default:
 		return nil, errors.New("mock error")

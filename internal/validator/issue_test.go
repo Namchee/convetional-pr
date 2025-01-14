@@ -71,23 +71,7 @@ func TestIssueValidator_IsValid(t *testing.T) {
 			},
 		},
 		{
-			name: "should reject if reference is not on the same repository",
-			args: args{
-				prNumber: 1,
-				meta: &entity.Meta{
-					Name:  "conventional-pr",
-					Owner: "namcheee",
-				},
-				config: true,
-			},
-			want: &entity.ValidationResult{
-				Name:   constants.IssueValidatorName,
-				Active: true,
-				Result: constants.ErrNoIssue,
-			},
-		},
-		{
-			name: "should pass if issue is referenced as magic string",
+			name: "should pass if issue is referenced as magic string in the same repository",
 			args: args{
 				prNumber: 2,
 				meta: &entity.Meta{
@@ -101,6 +85,40 @@ func TestIssueValidator_IsValid(t *testing.T) {
 				Name:   constants.IssueValidatorName,
 				Active: true,
 				Result: nil,
+			},
+		},
+		{
+			name: "should pass if issue is referenced as magic string in different repository",
+			args: args{
+				prNumber: 3,
+				meta: &entity.Meta{
+					Name:  "conventional-pr",
+					Owner: "namcheee",
+				},
+				body:   "Closes    vitejs/vite#1783",
+				config: true,
+			},
+			want: &entity.ValidationResult{
+				Name:   constants.IssueValidatorName,
+				Active: true,
+				Result: nil,
+			},
+		},
+		{
+			name: "should reject if issue is not accessible",
+			args: args{
+				prNumber: 2,
+				meta: &entity.Meta{
+					Name:  "conventional-pr",
+					Owner: "namcheee",
+				},
+				body:   "Closes #4",
+				config: true,
+			},
+			want: &entity.ValidationResult{
+				Name:   constants.IssueValidatorName,
+				Active: true,
+				Result: constants.ErrNoIssue,
 			},
 		},
 		{
